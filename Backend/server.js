@@ -1,18 +1,33 @@
 const express=require("express")
-const bcrypt=require("bcrypt")
+const { PrismaClient } = require('./generated/prisma');
+
+const prisma=new PrismaClient()
+
+
 const app=express()
 
-app.post("/register",async(req,res)=>{
-    const {Name,Email,PhoneNumber,Password,Type,Details}=req.body
-    const hashp=bcrypt.hash(Password,10)
+app.use(express.json())
 
-
-
-})
 app.get("/",(req,res)=>{
     res.send("Healthy")
 })
 
+
+app.post("/register",async(req,res)=>{
+    const{name,email,phone,password,type,details}=req.body
+    const resp=await prisma.user.create({
+        data:{
+            name:name,
+            email:email,
+            phone:phone,
+            password:password,
+            type:type,
+            details:details
+        }
+    })
+
+})
+
 app.listen(3000,()=>{
-    console.log("Server is running")
+    console.log("server is running")
 })
