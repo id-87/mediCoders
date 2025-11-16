@@ -1,5 +1,5 @@
 const express=require('express')
-
+const bcrypt=require('bcrypt')
 const { PrismaClient } = require('@prisma/client');
 const prisma=new PrismaClient()
     const router=express.Router()
@@ -13,11 +13,15 @@ const prisma=new PrismaClient()
         const user=await prisma.user.findUnique({
             where:{email:email}
         })
+        
         if(!user){
             return res.send("Signup first")
         }
-        if(user.password===password){
+        const auth=await bcrypt.compare(password,user.password)
+        if(auth){
             return res.send("login successful")
+            // authentication token session wagera generate karna hai ab
+
         }
         else{
             return res.send("Credentials invalid")
@@ -35,12 +39,13 @@ const prisma=new PrismaClient()
 
     router.post("/register",async(req,res)=>{
         const{name,email,phone,password,type,details}=req.body
+        const hashp=await bcrypt.hash(password,10)
         const resp=await prisma.user.create({
             data:{
                 name:name,
                 email:email,
                 phone:phone,
-                password:password,
+                password:hashp,
                 type:type,
                 details:details
             }
