@@ -18,6 +18,7 @@ const prisma=new PrismaClient()
         }
         if(user.password===password){
             return res.send("login successful")
+            // authentication token session wagera generate karna hai ab
         }
         else{
             return res.send("Credentials invalid")
