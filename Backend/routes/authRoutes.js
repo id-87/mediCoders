@@ -1,6 +1,7 @@
 const express=require('express')
 
-module.exports = (prisma) => {
+const { PrismaClient } = require('@prisma/client');
+const prisma=new PrismaClient()
     const router=express.Router()
 
     router.post('/login',async(req,res)=>{
@@ -45,7 +46,10 @@ module.exports = (prisma) => {
             }
         })
         return res.send(resp)
+    
+    
+    
     })
 
-    return router
-}
+
+module.exports=router

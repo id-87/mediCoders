@@ -1,5 +1,5 @@
 const express=require("express")
-const { PrismaClient } = require('./generated/prisma');
+const { PrismaClient } = require('@prisma/client');
 const authRoutes=require('./routes/authRoutes')
 
 
@@ -8,7 +8,7 @@ const prisma=new PrismaClient()
 
 const app=express()
 app.use(express.json())
-app.use(express.json())
+// app.use(express.json())
 
 app.get("/",(req,res)=>{
     res.send("Healthy")
