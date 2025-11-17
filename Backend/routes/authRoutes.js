@@ -2,7 +2,9 @@ const express=require('express')
 const bcrypt=require('bcrypt')
 const { PrismaClient } = require('@prisma/client');
 const prisma=new PrismaClient()
+const jwt=require('jsonwebtoken')
     const router=express.Router()
+
 
     router.post('/login',async(req,res)=>{
         const {email,password}=req.body
@@ -19,8 +21,21 @@ const prisma=new PrismaClient()
         }
         const auth=await bcrypt.compare(password,user.password)
         if(auth){
-            return res.send("login successful")
-            // authentication token session wagera generate karna hai ab
+            
+            const atoken=jwt.sign({
+                email:user.email,type:user.type
+            },
+            process.env.access)
+            const rtoken=jwt.sign({
+                email:user.email,
+                type:user.type
+            },process.env.refresh)
+            return res.json({
+                message:"Login Successful",
+                atoken,
+                rtoken
+            })
+        
 
         }
         else{
