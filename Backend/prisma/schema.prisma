@@ -13,13 +13,28 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-model user{
+model User{
   id Int @id @default(autoincrement())
   name String
   email String @unique
-  phone Int @unique
+  phone String @unique
   password String
   type String
   details String
 
+  appointmentsDoctor  Appointment[] @relation("DoctorAppointments")
+  appointmentsPatient Appointment[] @relation("PatientAppointments")
+
 }
+
+model Appointment {
+  id        Int       @id @default(autoincrement())
+  doctorId  Int
+  patientId Int
+  date      DateTime
+  reason    String?
+
+  doctor    User      @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  patient   User      @relation("PatientAppointments", fields: [patientId], references: [id])
+}
+
