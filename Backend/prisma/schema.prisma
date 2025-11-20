@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,13 +7,57 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-model user{
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  phone Int @unique
-  password String
-  type String
-  details String
 
+enum AppointmentStatus {
+  scheduled
+  completed
+  cancelled
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String  @unique
+  phone     String  @unique
+  password  String
+  type      String     // "doctor" | "patient"
+
+  // Only doctors will have profile + availability
+  doctorProfile DoctorProfile?
+  availability  Availability[]
+
+  // Appointments
+  appointmentsDoctor  Appointment[] @relation("DoctorAppointments")
+  appointmentsPatient Appointment[] @relation("PatientAppointments")
+}
+
+model DoctorProfile {
+  id        Int    @id @default(autoincrement())
+  doctorId  Int    @unique
+  speciality String
+  experience Int?            // years
+  clinicAddress String?
+
+  doctor    User   @relation(fields: [doctorId], references: [id])
+}
+
+model Appointment {
+  id         Int               @id @default(autoincrement())
+  doctorId   Int
+  patientId  Int
+  date       DateTime
+  reason     String?
+  status     AppointmentStatus @default(scheduled)
+
+  doctor     User              @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  patient    User              @relation("PatientAppointments", fields: [patientId], references: [id])
+}
+
+model Availability {
+  id        Int      @id @default(autoincrement())
+  doctorId  Int
+  date      DateTime
+  slots     Json     // example: ["10:00", "11:00", "12:00"]
+
+  doctor    User     @relation(fields: [doctorId], references: [id])
 }
