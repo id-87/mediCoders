@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 
 
 router.get('/:id', async (req, res) => {
-        const{id}=Number(req.params.id)
+        const id=Number(req.params.id)
     try {
         const docByID=await prisma.user.findUnique({
                 where:{id:id}
@@ -50,13 +50,13 @@ router.get('/:id', async (req, res) => {
 
 
 router.delete('/:id', async (req, res) => {
-        const{id}=Number(req.params.id)
+        const id=Number(req.params.id)
     try {
         const del=await prisma.user.delete({
                 where:{id:id}
         })
         
-        return res.send(`Delete doctor ID: ${req.params.id}`);
+        return res.send(del);
     } catch (err) {
         return res.send("Server error");
     }

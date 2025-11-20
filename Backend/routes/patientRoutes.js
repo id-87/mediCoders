@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    const{id}=Number(req.params.id)
+    const id=Number(req.params.id)
     try {
         const resp=await prisma.user.findUnique({
             where:{id:id}
@@ -48,7 +48,7 @@ router.get('/:id', async (req, res) => {
 
 
 router.delete('/:id', async (req, res) => {
-    const{id}=Number(req.params.id)
+    const id=Number(req.params.id)
     try {
         const del=await prisma.user.delete({
             where:{id:id}
