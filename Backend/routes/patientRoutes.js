@@ -1,44 +1,62 @@
-console.log("Patient Routes accessible only to patients")
-// GET: /doctors
-// GET: /doctors/:id
-//POST: /appointments
-//GET: /appointments
-
-const express=require('express')
-const router=express.Router()
+const express = require('express');
+const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma=new PrismaClient()
 
-router.get("/doctors",async(req,res)=>{
-    const resp=await prisma.user.findMany({
-        where:{type:"doctor"}
-    })
-    res.send(resp)
-})
-router.get("/doctors/:id",async(req,res)=>{
-    const {id}=req.params.id
+router.get('/', async (req, res) => {
+    try {
+        const resp=await prisma.user.findMany({
+            where:{
+                type:"patient"
+            }
+        })
+        return res.send("Get all patients");
+    } catch (err) {
+        return res.send("Server error");
+    }
+});
 
-    const resp=await prisma.user.findUnique({
-        where:{id:id}
-    })
-    res.send(resp)
-})
-router.post("/appointments",async(req,res)=>{
-    const{doctorID,date,slot}=req.body
-    const resp=await prisma.appointment.create({
-        data:{
-            doctorID:doctorID,
-            date:date,
-            slot:slot
-        }
-    })
-
-})
+router.get('/:id', async (req, res) => {
+    const{id}=Number(req.params.id)
+    try {
+        const resp=await prisma.user.findUnique({
+            where:{id:id}
+        })
+        return res.send(resp);
+    } catch (err) {
+        return res.send("Server error");
+    }
+});
 
 
-router.get("/appointments/",async(req,res)=>{
-    // const {id}=req.query.id
-    const resp=await prisma.appointment.findMany()
-    res.send(resp)
+// router.post('/', async (req, res) => {
+//     try {
+//         return res.send("Create patient");
+//     } catch (err) {
+//         return res.send("Server error");
+//     }
+// });
 
-})
+
+// router.put('/:id', async (req, res) => {
+//     try {
+//         return res.send(`Update patient ID: ${req.params.id}`);
+//     } catch (err) {
+//         return res.send("Server error");
+//     }
+// });
+
+
+router.delete('/:id', async (req, res) => {
+    const{id}=Number(req.params.id)
+    try {
+        const del=await prisma.user.delete({
+            where:{id:id}
+        })
+        return res.send(del);
+    } catch (err) {
+        return res.send("Server error");
+    }
+});
+
+module.exports = router;
