@@ -1,6 +1,9 @@
 const express=require("express")
 const { PrismaClient } = require('@prisma/client');
 const authRoutes=require('./routes/authRoutes')
+const doctorRoutes=require('./routes/doctorRoutes')
+const patientRoutes=require('./routes/patientRoutes')
+const appointmentRoutes=require('./routes/appointementRoutes')
 
 
 const prisma=new PrismaClient()
@@ -23,6 +26,9 @@ app.get("/users",async(req,res)=>{
 
 
 app.use('/auth',authRoutes)
+app.use('/doctor',doctorRoutes)
+app.use('/patient',patientRoutes)
+app.use('/appointment',appointmentRoutes)
 
 app.listen(3000,()=>{
     console.log("server is running")

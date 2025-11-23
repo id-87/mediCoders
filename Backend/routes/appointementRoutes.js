@@ -3,6 +3,10 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma=new PrismaClient()
 
+router.get("/test",(req,res)=>{
+    res.send("Appointment route working")
+})
+
 router.get('/', async (req, res) => {
     try {
         const resp=await prisma.appointment.findMany()
