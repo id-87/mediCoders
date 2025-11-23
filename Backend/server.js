@@ -26,9 +26,9 @@ app.get("/users",async(req,res)=>{
 
 
 app.use('/auth',authRoutes)
-app.use('/doctor',doctorRoutes)
-app.use('/patient',patientRoutes)
-app.use('/appointment',appointmentRoutes)
+app.use('/doctors',doctorRoutes)
+app.use('/patients',patientRoutes)
+app.use('/appointments',appointmentRoutes)
 
 app.listen(3000,()=>{
     console.log("server is running")
