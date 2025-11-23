@@ -20,13 +20,14 @@ model User {
   email     String  @unique
   phone     String  @unique
   password  String
-  type      String     // "doctor" | "patient"
+  type      String
+  details   String     
 
-  // Only doctors will have profile + availability
+  
   doctorProfile DoctorProfile?
   availability  Availability[]
 
-  // Appointments
+
   appointmentsDoctor  Appointment[] @relation("DoctorAppointments")
   appointmentsPatient Appointment[] @relation("PatientAppointments")
 }
@@ -35,7 +36,7 @@ model DoctorProfile {
   id        Int    @id @default(autoincrement())
   doctorId  Int    @unique
   speciality String
-  experience Int?            // years
+  experience Int?            
   clinicAddress String?
 
   doctor    User   @relation(fields: [doctorId], references: [id])
@@ -57,7 +58,7 @@ model Availability {
   id        Int      @id @default(autoincrement())
   doctorId  Int
   date      DateTime
-  slots     Json     // example: ["10:00", "11:00", "12:00"]
+  slots     Json     
 
   doctor    User     @relation(fields: [doctorId], references: [id])
 }

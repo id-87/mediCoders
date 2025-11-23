@@ -4,17 +4,13 @@ const { PrismaClient } = require('@prisma/client');
 const prisma=new PrismaClient()
 
 router.get("/test",(req,res)=>{
-    res.send("Patient route working")
+    res.send("Appointment route working")
 })
 
 router.get('/', async (req, res) => {
     try {
-        const resp=await prisma.user.findMany({
-            where:{
-                type:"patient"
-            }
-        })
-        return res.send("Get all patients");
+        const resp=await prisma.appointment.findMany()
+        return res.send(resp);
     } catch (err) {
         return res.send("Server error");
     }
@@ -23,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const id=Number(req.params.id)
     try {
-        const resp=await prisma.user.findUnique({
+        const resp=await prisma.appointment.findUnique({
             where:{id:id}
         })
         return res.send(resp);
@@ -35,7 +31,7 @@ router.get('/:id', async (req, res) => {
 
 // router.post('/', async (req, res) => {
 //     try {
-//         return res.send("Create patient");
+//         return res.send("Create appointment");
 //     } catch (err) {
 //         return res.send("Server error");
 //     }
@@ -44,7 +40,7 @@ router.get('/:id', async (req, res) => {
 
 // router.put('/:id', async (req, res) => {
 //     try {
-//         return res.send(`Update patient ID: ${req.params.id}`);
+//         return res.send(`Update appointment ID: ${req.params.id}`);
 //     } catch (err) {
 //         return res.send("Server error");
 //     }
@@ -54,10 +50,10 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const id=Number(req.params.id)
     try {
-        const del=await prisma.user.delete({
+        const resp=await prisma.appointment.delete({
             where:{id:id}
         })
-        return res.send(del);
+        return res.send(`Delete appointment ID: ${req.params.id}`);
     } catch (err) {
         return res.send("Server error");
     }
