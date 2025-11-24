@@ -23,7 +23,7 @@ const Signup = () => {
     e.preventDefault(); 
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/register", formData);
+      const response = await axios.post("https://medicoders.onrender.com/auth/register", formData);
       console.log("Success:", response.data);
       alert("User registered!");
     } catch (error) {

@@ -18,7 +18,7 @@ const Login = () => {
         e.preventDefault(); 
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", formData);
+      const response = await axios.post("https://medicoders.onrender.com/auth/login", formData);
       console.log("Success:", response.data);
       alert("Login Successful!");
     } catch (error) {
