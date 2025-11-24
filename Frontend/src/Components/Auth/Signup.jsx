@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { useState } from 'react';
 const Signup = () => {
-    const [dropdownValue, setDropdownValue] = useState("");
+    
     const [formData,setFormData]=useState({
         name:"",
         email:"",
@@ -20,10 +20,10 @@ const Signup = () => {
     };
 
     const handleSubmit = async (e) => {
-    e.preventDefault(); // stops page refresh
+    e.preventDefault(); 
 
     try {
-      const response = await axios.post("http://localhost:5000/register", formData);
+      const response = await axios.post("http://localhost:3000/auth/register", formData);
       console.log("Success:", response.data);
       alert("User registered!");
     } catch (error) {
@@ -55,7 +55,7 @@ const Signup = () => {
         <select
           id='type'
           name='type'
-          value={formData.userType}
+          value={formData.type}
         onChange={handleChange}
         >
           {/* <option value="">-- Select --</option> */}
@@ -65,6 +65,7 @@ const Signup = () => {
         </select>
       </label>
         <label>Details<input type="text" id='details' name='details'  value={formData.details} onChange={handleChange}/></label>
+        <button type="submit">Submit</button>
       </form>
     </div>
   )
