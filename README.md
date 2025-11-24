@@ -19,7 +19,7 @@ npx prisma generate
 
 
 Project Overview:
-We often notice that whenever we need to see a docto for some emergency and no prior appointment is booked there is a long waiting and also it is not feasable to visit multiple options at once.
+We often notice that whenever we need to see a doctor for some emergency and no prior appointment is booked there is a long waiting and also it is not feasable to visit multiple options at once.
 
 Here at MediCodes we are building a tech solution where patients will be able to view the available slots and doctors available and then visit them also there will be a universal medical history off each visit available to all doctors when patient visits.
 
