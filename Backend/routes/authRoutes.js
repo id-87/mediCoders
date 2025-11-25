@@ -24,8 +24,10 @@ const jwt=require('jsonwebtoken')
             
             const atoken=jwt.sign({
                 email:user.email,type:user.type
-            },
+            }
+            ,
             process.env.access)
+             console.log(atoken)
             const rtoken=jwt.sign({
                 email:user.email,
                 type:user.type
@@ -35,7 +37,7 @@ const jwt=require('jsonwebtoken')
                 atoken,
                 rtoken
             })
-        
+       
 
         }
         else{
