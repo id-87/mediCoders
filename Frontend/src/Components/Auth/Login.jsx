@@ -18,8 +18,15 @@ const Login = () => {
         e.preventDefault(); 
 
     try {
+      
       const response = await axios.post("https://medicoders.onrender.com/auth/login", formData);
       console.log("Success:", response.data);
+      const { atoken, rtoken } = response.data || {};
+      if (atoken && rtoken) {
+        localStorage.setItem("accessToken", atoken);
+        localStorage.setItem("refreshToken", rtoken);
+      }
+      // console.log(response)
       alert("Login Successful!");
     } catch (error) {
       console.error("Error:", error);
