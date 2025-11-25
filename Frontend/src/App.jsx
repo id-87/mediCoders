@@ -1,19 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Signup from './Components/Auth/Signup'
-import Login from './Components/Auth/Login'
-function App() {
-  // const [count, setCount] = useState(0)
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LandingPage from './Components/Home/LandingPage';
+import Login from './Components/Auth/Login';
+import Signup from './Components/Auth/Signup';
+import DoctorPortal from './Components/Portals/Doctor/DoctorPortal';
+import PatientPortal from './Components/Portals/Patient/PatientPortal';
 
+function App() {
   return (
-    <>
-      <h1>Welcome to medicoders</h1>
-      <Signup/>
-      <Login/>   
-      </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/doctor" element={<DoctorPortal />} />
+        <Route path="/patient" element={<PatientPortal />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
