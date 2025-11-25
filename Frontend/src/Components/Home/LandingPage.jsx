@@ -4,7 +4,7 @@ import '../../medical-theme.css';
 
 const LandingPage = () => (
     <div>
-        {/* Header */}
+        { }
         <div className="header">
             <div className="container">
                 <h1>MediCoders</h1>
@@ -20,7 +20,7 @@ const LandingPage = () => (
             </div>
         </div>
 
-        {/* Problem Section */}
+        { }
         <div className="section" style={{ background: 'white' }}>
             <div className="container">
                 <h2 className="section-title">The Problem We Solve</h2>
@@ -40,7 +40,7 @@ const LandingPage = () => (
             </div>
         </div>
 
-        {/* Solution Section */}
+        { }
         <div className="section">
             <div className="container">
                 <h2 className="section-title">Our Solution</h2>
@@ -94,7 +94,7 @@ const LandingPage = () => (
             </div>
         </div>
 
-        {/* CTA Section */}
+        { }
         <div className="section" style={{ background: 'white', textAlign: 'center' }}>
             <div className="container">
                 <h2 className="section-title">Ready to Transform Your Healthcare Experience?</h2>

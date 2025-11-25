@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../../../medical-theme.css';
 
 const DoctorPortal = () => {
-  // Sample slots data - in real app, this would come from API
+
   const [slots] = useState([
     { id: 1, time: '9:00 AM - 9:30 AM', status: 'available', patient: null },
     { id: 2, time: '9:30 AM - 10:00 AM', status: 'booked', patient: 'John Doe' },
@@ -20,7 +20,7 @@ const DoctorPortal = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-light)' }}>
-      {/* Header */}
+      { }
       <div className="portal-header">
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -35,9 +35,9 @@ const DoctorPortal = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+      { }
       <div className="portal-container">
-        {/* Stats Cards */}
+        { }
         <div className="dashboard-grid" style={{ marginBottom: '30px' }}>
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -70,7 +70,7 @@ const DoctorPortal = () => {
           </div>
         </div>
 
-        {/* Slots Management */}
+        { }
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h3 style={{ margin: 0 }}>Today's Schedule</h3>
@@ -110,7 +110,7 @@ const DoctorPortal = () => {
           </div>
         </div>
 
-        {/* Patient History Section */}
+        { }
         <div className="card" style={{ marginTop: '30px' }}>
           <h3 style={{ marginBottom: '20px' }}>📋 Universal Medical Records</h3>
           <p style={{ color: 'var(--text-light)', marginBottom: '15px' }}>

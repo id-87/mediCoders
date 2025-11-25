@@ -17,7 +17,7 @@ const Login = () => {
     });
   }
 
-  // Function to decode JWT token
+
   function decodeJWT(token) {
     try {
       const base64Url = token.split('.')[1];
@@ -43,27 +43,27 @@ const Login = () => {
       const responseData = response.data || {};
       const { atoken, rtoken, type, userType, user } = responseData;
 
-      // Store tokens
+
       if (atoken && rtoken) {
         localStorage.setItem('accessToken', atoken);
         localStorage.setItem('refreshToken', rtoken);
       }
 
-      // Try to get user type from multiple possible locations
+
       let accountType = type || userType;
 
-      // Check if type is in a nested user object
+
       if (!accountType && user) {
         console.log('User object found:', user);
         accountType = user.type || user.userType || user.role || user.accountType;
       }
 
-      // Check in responseData directly for other possible field names
+
       if (!accountType) {
         accountType = responseData.role || responseData.accountType;
       }
 
-      // If still no type found, decode the JWT token
+
       if (!accountType && atoken) {
         console.log('Decoding JWT token to extract user type...');
         const decoded = decodeJWT(atoken);
@@ -83,7 +83,7 @@ const Login = () => {
 
       alert('Login Successful!');
 
-      // Navigate based on user type
+
       if (accountType === 'doctor') {
         console.log('✓ Redirecting to DOCTOR portal');
         navigate('/doctor');
