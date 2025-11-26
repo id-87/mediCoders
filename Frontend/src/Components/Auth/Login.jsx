@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from "axios";
 
 import { useState } from 'react';
@@ -8,6 +8,8 @@ const Login = () => {
             email:"",
             password:""
         })
+
+        const[user, setUser] = useState("Loading");
 
     function handleChange(e){
         setFormData({
@@ -24,7 +26,11 @@ const Login = () => {
       const { atoken, rtoken } = response.data || {};
       if (atoken && rtoken) {
         localStorage.setItem("accessToken", atoken);
+        // atoken -> patient, doctor
         localStorage.setItem("refreshToken", rtoken);
+        // setUser(user);
+      } else {
+        // setUser(null);
       }
       // console.log(response)
       alert("Login Successful!");
@@ -33,14 +39,23 @@ const Login = () => {
       alert("Something went wrong");
     }
     }
+
+    // useEffect(() => {
+    //   if(user){
+    //     if
+    //   }
+    // }, [user])
   return (
-    <div>
-        <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:<input type="text" id='email' name='email' value={formData.email} onChange={handleChange} /></label>
-        <label htmlFor="password">Password:<input type="password" id='password' name='password' value={formData.password} onChange={handleChange} /></label>
-        <button type='submit'>Submit</button>
-        </form>
-    </div>
+    // {
+      user === "Loading" ? <h2>Loading</h2> : user ? (user.type === "patient" ? <div></div> : <p></p>) : <h1>Login</h1>
+    // }
+    // <div>
+    //     <form onSubmit={handleSubmit}>
+    //     <label htmlFor="email">Email:<input type="text" id='email' name='email' value={formData.email} onChange={handleChange} /></label>
+    //     <label htmlFor="password">Password:<input type="password" id='password' name='password' value={formData.password} onChange={handleChange} /></label>
+    //     <button type='submit'>Submit</button>
+    //     </form>
+    // </div>
   )
 }
 
