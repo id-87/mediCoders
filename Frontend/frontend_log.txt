@@ -1,0 +1,1 @@
+nohup: VITE_API_URL=https://upset-cases-trade.loca.lt: No such file or directory

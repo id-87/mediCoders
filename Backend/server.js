@@ -12,7 +12,10 @@ const prisma = new PrismaClient()
 
 const app = express()
 app.use(express.json())
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*', // Allow specific frontend or all
+    credentials: true
+}));
 // app.use(express.json())
 
 app.get("/", (req, res) => {
