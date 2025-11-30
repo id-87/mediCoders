@@ -16,11 +16,11 @@ const PatientPortal = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      // Fetch all doctors
+
       const doctorsResponse = await api.get('/doctors');
       setDoctors(doctorsResponse.data || []);
 
-      // Fetch appointments
+
       const appointmentsResponse = await api.get('/appointments');
       setMyAppointments(appointmentsResponse.data || []);
 
