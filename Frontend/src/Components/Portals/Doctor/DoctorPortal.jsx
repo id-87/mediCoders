@@ -1,26 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../../../api';
 import '../../../medical-theme.css';
 
 const DoctorPortal = () => {
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [slots] = useState([
-    { id: 1, time: '9:00 AM - 9:30 AM', status: 'available', patient: null },
-    { id: 2, time: '9:30 AM - 10:00 AM', status: 'booked', patient: 'John Doe' },
-    { id: 3, time: '10:00 AM - 10:30 AM', status: 'available', patient: null },
-    { id: 4, time: '10:30 AM - 11:00 AM', status: 'booked', patient: 'Jane Smith' },
-    { id: 5, time: '11:00 AM - 11:30 AM', status: 'available', patient: null },
-    { id: 6, time: '2:00 PM - 2:30 PM', status: 'available', patient: null },
-    { id: 7, time: '2:30 PM - 3:00 PM', status: 'booked', patient: 'Mike Johnson' },
-    { id: 8, time: '3:00 PM - 3:30 PM', status: 'available', patient: null },
-  ]);
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
 
-  const availableCount = slots.filter(s => s.status === 'available').length;
-  const bookedCount = slots.filter(s => s.status === 'booked').length;
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true);
+      // Fetch all appointments
+      const response = await api.get('/appointments');
+      setAppointments(response.data || []);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching appointments:', err);
+      setError('Failed to load appointments. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate statistics
+  const scheduledCount = appointments.filter(a => a.status === 'scheduled').length;
+  const completedCount = appointments.filter(a => a.status === 'completed').length;
+  const totalPatients = new Set(appointments.map(a => a.patientId)).size;
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', background: 'var(--bg-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="card" style={{ textAlign: 'center' }}>
+          <h3>Loading...</h3>
+          <p style={{ color: 'var(--text-light)' }}>Please wait while we fetch your appointments</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-light)' }}>
-      { }
+      {/* Header */}
       <div className="portal-header">
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -35,15 +60,24 @@ const DoctorPortal = () => {
         </div>
       </div>
 
-      { }
+      {/* Main Content */}
       <div className="portal-container">
-        { }
+        {error && (
+          <div className="card" style={{ marginBottom: '30px', background: 'var(--accent-color)', color: 'white' }}>
+            <p>{error}</p>
+            <button onClick={fetchAppointments} className="btn" style={{ background: 'white', color: 'var(--accent-color)', marginTop: '10px' }}>
+              Retry
+            </button>
+          </div>
+        )}
+
+        {/* Statistics Dashboard */}
         <div className="dashboard-grid" style={{ marginBottom: '30px' }}>
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ color: 'var(--text-light)', marginBottom: '5px' }}>Available Slots</p>
-                <h3 style={{ fontSize: '36px', color: 'var(--secondary-color)', margin: 0 }}>{availableCount}</h3>
+                <p style={{ color: 'var(--text-light)', marginBottom: '5px' }}>Scheduled Appointments</p>
+                <h3 style={{ fontSize: '36px', color: 'var(--secondary-color)', margin: 0 }}>{scheduledCount}</h3>
               </div>
               <div style={{ fontSize: '48px' }}>✅</div>
             </div>
@@ -52,8 +86,8 @@ const DoctorPortal = () => {
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ color: 'var(--text-light)', marginBottom: '5px' }}>Booked Appointments</p>
-                <h3 style={{ fontSize: '36px', color: 'var(--primary-color)', margin: 0 }}>{bookedCount}</h3>
+                <p style={{ color: 'var(--text-light)', marginBottom: '5px' }}>Completed</p>
+                <h3 style={{ fontSize: '36px', color: 'var(--primary-color)', margin: 0 }}>{completedCount}</h3>
               </div>
               <div style={{ fontSize: '48px' }}>📅</div>
             </div>
@@ -62,55 +96,65 @@ const DoctorPortal = () => {
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ color: 'var(--text-light)', marginBottom: '5px' }}>Today's Patients</p>
-                <h3 style={{ fontSize: '36px', color: 'var(--accent-color)', margin: 0 }}>{bookedCount}</h3>
+                <p style={{ color: 'var(--text-light)', marginBottom: '5px' }}>Total Patients</p>
+                <h3 style={{ fontSize: '36px', color: 'var(--accent-color)', margin: 0 }}>{totalPatients}</h3>
               </div>
               <div style={{ fontSize: '48px' }}>👥</div>
             </div>
           </div>
         </div>
 
-        { }
+        {/* Appointments List */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ margin: 0 }}>Today's Schedule</h3>
-            <button className="btn btn-primary">Add Slot</button>
+            <h3 style={{ margin: 0 }}>All Appointments</h3>
+            <button className="btn btn-primary" onClick={fetchAppointments}>Refresh</button>
           </div>
 
-          <div style={{ display: 'grid', gap: '15px' }}>
-            {slots.map(slot => (
-              <div
-                key={slot.id}
-                className={`slot-card ${slot.status === 'available' ? 'slot-available' : 'slot-unavailable'}`}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: '16px', marginBottom: '5px' }}>
-                      {slot.time}
-                    </div>
-                    {slot.patient && (
-                      <div style={{ color: 'var(--text-light)', fontSize: '14px' }}>
-                        Patient: {slot.patient}
+          {appointments.length > 0 ? (
+            <div style={{ display: 'grid', gap: '15px' }}>
+              {appointments.map(appointment => (
+                <div
+                  key={appointment.id}
+                  className={`slot-card ${appointment.status === 'scheduled' ? 'slot-available' : 'slot-unavailable'}`}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: '16px', marginBottom: '5px' }}>
+                        Appointment #{appointment.id}
                       </div>
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span className={`badge ${slot.status === 'available' ? 'badge-success' : 'badge-danger'}`}>
-                      {slot.status === 'available' ? 'Available' : 'Booked'}
-                    </span>
-                    {slot.patient && (
+                      <div style={{ color: 'var(--text-light)', fontSize: '14px' }}>
+                        Date: {appointment.date ? new Date(appointment.date).toLocaleString() : 'Not scheduled'}
+                      </div>
+                      <div style={{ color: 'var(--text-light)', fontSize: '14px', marginTop: '5px' }}>
+                        Patient ID: {appointment.patientId} | Doctor ID: {appointment.doctorId}
+                      </div>
+                      {appointment.reason && (
+                        <div style={{ color: 'var(--text-light)', fontSize: '14px', marginTop: '5px' }}>
+                          Reason: {appointment.reason}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span className={`badge ${appointment.status === 'scheduled' ? 'badge-success' : 'badge-danger'}`}>
+                        {appointment.status || 'scheduled'}
+                      </span>
                       <button className="btn btn-primary" style={{ padding: '8px 16px' }}>
-                        View History
+                        View Details
                       </button>
-                    )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: 'var(--text-light)', textAlign: 'center', padding: '20px' }}>
+              No appointments found
+            </p>
+          )}
         </div>
 
-        { }
+        {/* Universal Medical Records Section */}
         <div className="card" style={{ marginTop: '30px' }}>
           <h3 style={{ marginBottom: '20px' }}>📋 Universal Medical Records</h3>
           <p style={{ color: 'var(--text-light)', marginBottom: '15px' }}>
@@ -119,7 +163,7 @@ const DoctorPortal = () => {
           </p>
           <div style={{ padding: '20px', background: 'var(--bg-light)', borderRadius: '8px', textAlign: 'center' }}>
             <p style={{ color: 'var(--text-light)' }}>
-              Select a patient from your booked appointments to view their medical history
+              Select a patient from your appointments to view their medical history
             </p>
           </div>
         </div>

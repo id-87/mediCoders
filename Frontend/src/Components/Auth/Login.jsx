@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../../api';
 import '../../medical-theme.css';
 
 const Login = () => {
@@ -36,7 +36,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://medicoders.onrender.com/auth/login', formData);
+      const response = await api.post('/auth/login', formData);
       console.log('=== LOGIN DEBUG ===');
       console.log('Full API Response:', JSON.stringify(response.data, null, 2));
 

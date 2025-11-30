@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../../api';
 import '../../medical-theme.css';
 
 const Signup = () => {
@@ -25,7 +25,7 @@ const Signup = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://medicoders.onrender.com/auth/register', formData);
+      const response = await api.post('/auth/register', formData);
       console.log('Success:', response.data);
       alert('Registration successful! Please login.');
       navigate('/login');
