@@ -81,6 +81,15 @@ const Login = () => {
         localStorage.setItem('userType', accountType);
       }
 
+      // Store user ID if available
+      if (user && user.id) {
+        localStorage.setItem('userId', user.id);
+        console.log('Stored userId:', user.id);
+      } else if (responseData.id) {
+        localStorage.setItem('userId', responseData.id);
+        console.log('Stored userId from response:', responseData.id);
+      }
+
       alert('Login Successful!');
 
 

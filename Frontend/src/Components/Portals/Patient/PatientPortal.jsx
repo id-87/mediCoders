@@ -44,6 +44,53 @@ const PatientPortal = () => {
     );
   }
 
+  // Booking State
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [bookingDate, setBookingDate] = useState('');
+  const [bookingReason, setBookingReason] = useState('');
+
+  const handleBookClick = (doctor) => {
+    setSelectedDoctor(doctor);
+    setShowBookingModal(true);
+    // Default to tomorrow at 10 AM
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(10, 0, 0, 0);
+    setBookingDate(tomorrow.toISOString().slice(0, 16));
+  };
+
+  const handleBookAppointment = async (e) => {
+    e.preventDefault();
+    const patientId = localStorage.getItem('userId');
+
+    if (!patientId) {
+      alert('User ID not found. Please logout and login again.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await api.post('/appointments', {
+        doctorId: selectedDoctor.id,
+        patientId: parseInt(patientId),
+        date: bookingDate,
+        reason: bookingReason,
+        status: 'scheduled'
+      });
+
+      alert('Appointment booked successfully!');
+      setShowBookingModal(false);
+      setBookingReason('');
+      fetchData(); // Refresh list
+    } catch (err) {
+      console.error('Booking error:', err);
+      alert('Failed to book appointment. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-light)' }}>
       {/* Header */}
@@ -101,6 +148,11 @@ const PatientPortal = () => {
                           {apt.status || 'scheduled'}
                         </span>
                       </div>
+                      {apt.doctor && (
+                        <div style={{ color: 'var(--primary-color)', fontSize: '14px', marginTop: '5px', fontWeight: 500 }}>
+                          Dr. {apt.doctor.name}
+                        </div>
+                      )}
                     </div>
                     <div style={{ display: 'flex', gap: '10px' }}>
                       <button className="btn btn-primary" style={{ padding: '8px 16px' }}>
@@ -143,7 +195,11 @@ const PatientPortal = () => {
                   <div style={{ color: 'var(--text-light)', fontSize: '14px', marginBottom: '15px' }}>
                     Email: {doctor.email}
                   </div>
-                  <button className="btn btn-primary" style={{ width: '100%' }}>
+                  <button
+                    className="btn btn-primary"
+                    style={{ width: '100%' }}
+                    onClick={() => handleBookClick(doctor)}
+                  >
                     Book Appointment
                   </button>
                 </div>
@@ -156,7 +212,54 @@ const PatientPortal = () => {
           )}
         </div>
 
-        {/* Medical Records Section */}
+        {/* Booking Modal */}
+        {showBookingModal && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+          }}>
+            <div className="card" style={{ maxWidth: '500px', width: '90%' }}>
+              <h3>Book Appointment</h3>
+              <p style={{ marginBottom: '20px', color: 'var(--text-light)' }}>
+                with {selectedDoctor?.name}
+              </p>
+
+              <form onSubmit={handleBookAppointment}>
+                <div className="form-group">
+                  <label>Date & Time</label>
+                  <input
+                    type="datetime-local"
+                    className="form-control"
+                    value={bookingDate}
+                    onChange={(e) => setBookingDate(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Reason for Visit</label>
+                  <textarea
+                    className="form-control"
+                    rows="3"
+                    value={bookingReason}
+                    onChange={(e) => setBookingReason(e.target.value)}
+                    placeholder="Briefly describe your symptoms or reason for visit"
+                    required
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                  <button type="button" className="btn" onClick={() => setShowBookingModal(false)} style={{ flex: 1, background: '#e0e0e0', color: '#333' }}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
+                    Confirm Booking
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>
