@@ -8,6 +8,10 @@ const PatientPortal = () => {
   const [myAppointments, setMyAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [bookingDate, setBookingDate] = useState('');
+  const [bookingReason, setBookingReason] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -64,11 +68,6 @@ const PatientPortal = () => {
     );
   }
 
-
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [bookingDate, setBookingDate] = useState('');
-  const [bookingReason, setBookingReason] = useState('');
 
   const handleBookClick = (doctor) => {
     setSelectedDoctor(doctor);

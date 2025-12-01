@@ -13,20 +13,7 @@ const prisma = new PrismaClient()
 const app = express()
 app.use(express.json())
 app.use(cors({
-    origin: function (origin, callback) {
-        const allowedOrigins = [
-            'http://localhost:5173',
-            'http://localhost:5174',
-            'http://localhost:5175',
-            'http://localhost:3000',
-            process.env.FRONTEND_URL
-        ];
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: true, // Allow all origins for local development
     credentials: true
 }));
 
