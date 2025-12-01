@@ -14,21 +14,41 @@ const PatientPortal = () => {
   }, []);
 
   const fetchData = async () => {
+    console.log('PatientPortal: fetchData called');
+
+
+    const safetyTimeout = setTimeout(() => {
+      console.log('PatientPortal: Safety timeout triggered');
+      setLoading(false);
+      setError('Request timed out. Please check your connection.');
+    }, 5000);
+
     try {
       setLoading(true);
-
+      console.log('PatientPortal: Fetching doctors...');
       const doctorsResponse = await api.get('/doctors');
-      setDoctors(doctorsResponse.data || []);
+      console.log('PatientPortal: Doctors fetched', doctorsResponse.data);
 
 
+      const doctorsData = Array.isArray(doctorsResponse.data) ? doctorsResponse.data : [];
+      setDoctors(doctorsData);
+
+
+      console.log('PatientPortal: Fetching appointments...');
       const appointmentsResponse = await api.get('/appointments');
-      setMyAppointments(appointmentsResponse.data || []);
+      console.log('PatientPortal: Appointments fetched', appointmentsResponse.data);
+
+
+      const appointmentsData = Array.isArray(appointmentsResponse.data) ? appointmentsResponse.data : [];
+      setMyAppointments(appointmentsData);
 
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Failed to load data. Please try again.');
     } finally {
+      clearTimeout(safetyTimeout);
+      console.log('PatientPortal: Loading set to false');
       setLoading(false);
     }
   };
@@ -44,7 +64,7 @@ const PatientPortal = () => {
     );
   }
 
-  // Booking State
+
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [bookingDate, setBookingDate] = useState('');
@@ -53,7 +73,7 @@ const PatientPortal = () => {
   const handleBookClick = (doctor) => {
     setSelectedDoctor(doctor);
     setShowBookingModal(true);
-    // Default to tomorrow at 10 AM
+
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(10, 0, 0, 0);
@@ -82,7 +102,7 @@ const PatientPortal = () => {
       alert('Appointment booked successfully!');
       setShowBookingModal(false);
       setBookingReason('');
-      fetchData(); // Refresh list
+      fetchData();
     } catch (err) {
       console.error('Booking error:', err);
       alert('Failed to book appointment. Please try again.');
