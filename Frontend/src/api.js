@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 // Create axios instance with base configuration
-const baseURL = 'https://medicoders.onrender.com/'; // Force localhost for debugging
+const baseURL = 'https://medicoders.onrender.com'; // Force localhost for debugging
 console.log('API Base URL:', baseURL);
 
 const api = axios.create({
